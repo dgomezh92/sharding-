@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  coordinator:
+    image: citusdata/citus:11.0
+    container_name: citus_coordinator
+    environment:
+      - POSTGRES_PASSWORD=commonpassword
+      - NODE_ROLE=coordinator
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./citus_coordinator_data:/var/lib/postgresql/data
+      # Monta el archivo .pgpass en una ubicación temporal (en modo lectura-escritura)
+      - ./.pgpass:/tmp/.pgpass
+    entrypoint: >
+      bash -c "cp /tmp/.pgpass /var/lib/postgresql/.pgpass &&
+               chmod 600 /var/lib/postgresql/.pgpass &&
+               docker-entrypoint.sh postgres"
+    networks:
+      - citus_net
+
+  worker1:
+    image: citusdata/citus:11.0
+    container_name: citus_worker1
+    environment:
+      - POSTGRES_PASSWORD=commonpassword
+      - NODE_ROLE=worker
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./citus_worker1_data:/var/lib/postgresql/data
+    networks:
+      - citus_net
+
+  worker2:
+    image: citusdata/citus:11.0
+    container_name: citus_worker2
+    environment:
+      - POSTGRES_PASSWORD=commonpassword
+      - NODE_ROLE=worker
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./citus_worker2_data:/var/lib/postgresql/data
+    networks:
+      - citus_net
+
+volumes:
+  citus_coordinator_data:
+  citus_worker1_data:
+  citus_worker2_data:
+
+networks:
+  citus_net:

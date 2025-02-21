@@ -1,0 +1,5 @@
+# Ignorar todas las carpetas y su contenido
+*/
+
+# No ignorar los archivos en el directorio raíz
+!/*.*
