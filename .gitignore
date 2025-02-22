@@ -3,3 +3,6 @@
 
 # No ignorar los archivos en el directorio raíz
 !/*.*
+
+# No ignorar la carpeta 'ejemplo'
+!/ejemplo/
